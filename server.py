@@ -16,7 +16,7 @@ from database import (
 )
 from scraper import run_full_sync
 
-PORT = 8080
+PORT = int(os.environ.get('PORT', 8080))
 BASE_DIR = os.path.dirname(__file__)
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 DATA_DIR = os.path.join(BASE_DIR, 'data')

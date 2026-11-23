@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Entornos virtuales
+venv/
+env/
+.env
+
+# Mantener la base de datos y banners para que Render empiece con el historial completo
+!data/sony_tracker.db
+!data/banners/
