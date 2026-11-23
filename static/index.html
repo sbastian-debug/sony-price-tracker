@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#06080d">
+    <title>SonyBoliviaDB - Liquid Glass UI</title>
+    <!-- Chart.js para gráficas interactivas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <!-- Iconos Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Fuente Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Efecto de Fondo Líquido / Ambient Glow Orbs -->
+    <div class="ambient-glow">
+        <div class="glow-orb orb-cyan"></div>
+        <div class="glow-orb orb-purple"></div>
+        <div class="glow-orb orb-blue"></div>
+        <div class="glow-orb orb-emerald"></div>
+    </div>
+
+    <!-- Barra de Navegación Flotante estilo iOS Liquid Glass -->
+    <header class="app-header glass-panel">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo glass-icon">
+                    <i class="ph-fill ph-waveform"></i>
+                </div>
+                <div>
+                    <h1>SonyBolivia<span class="gradient-text">DB</span></h1>
+                    <p class="tagline">Monitor de Precios & Archivo de Campañas</p>
+                </div>
+            </div>
+
+            <!-- Segmented Control estilo iOS con 2 Pestañas -->
+            <nav class="ios-segmented-control glass-subpanel">
+                <button id="tab-products-btn" class="segmented-item active" onclick="switchTab('products')">
+                    <i class="ph-bold ph-squares-four"></i>
+                    <span>Catálogo & Precios</span>
+                </button>
+                <button id="tab-campaigns-btn" class="segmented-item campaign-tab" onclick="switchTab('campaigns')">
+                    <i class="ph-bold ph-megaphone"></i>
+                    <span>Campañas & Imperdibles</span>
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <button id="sync-btn" class="glass-btn btn-sync" onclick="triggerSync()">
+                    <i class="ph-bold ph-arrows-clockwise" id="sync-icon"></i>
+                    <span>Actualizar Sony</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Métricas en Tarjetas de Cristal Líquido -->
+    <section class="stats-container">
+        <div class="glass-card stat-card">
+            <div class="stat-icon-wrap icon-blue">
+                <i class="ph-bold ph-shopping-bag"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Total Catálogo</span>
+                <span class="stat-value" id="stat-total-products">...</span>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card glow-cyan">
+            <div class="stat-icon-wrap icon-blue">
+                <i class="ph-bold ph-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">En Stock (Disponibles)</span>
+                <span class="stat-value text-cyan" id="stat-in-stock">...</span>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card glow-rose">
+            <div class="stat-icon-wrap icon-rose">
+                <i class="ph-bold ph-x-circle"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Agotados (Sin Stock)</span>
+                <span class="stat-value text-rose" id="stat-out-of-stock">...</span>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card glow-emerald">
+            <div class="stat-icon-wrap icon-emerald">
+                <i class="ph-bold ph-chart-line-down"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">En Mínimo Histórico</span>
+                <span class="stat-value text-emerald" id="stat-min-prices">...</span>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card glow-amber">
+            <div class="stat-icon-wrap icon-amber">
+                <i class="ph-bold ph-megaphone-simple"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Campañas Archivadas</span>
+                <span class="stat-value text-amber" id="stat-total-campaigns">...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISTA 1: CATÁLOGO Y PRECIOS -->
+    <main id="view-products" class="tab-view active">
+        <!-- Panel de Filtros y Selector de Vista -->
+        <div class="glass-card controls-card">
+            <div class="search-box glass-input-wrap">
+                <i class="ph-bold ph-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Buscar por producto, modelo (ej. Bravia, WH-1000XM6, XB100)..." oninput="applyFiltersDebounced()">
+            </div>
+
+            <div class="filters-cluster">
+                <div class="glass-select-wrap">
+                    <label>Disponibilidad:</label>
+                    <select id="stock-select" onchange="applyFilters()">
+                        <option value="in_stock" selected>En Stock (Disponibles)</option>
+                        <option value="all">Todos los Productos</option>
+                        <option value="out_of_stock">Solo Agotados</option>
+                        <option value="just_exhausted">Recién Agotados ⚠️</option>
+                    </select>
+                </div>
+
+                <div class="glass-select-wrap">
+                    <label>Categoría:</label>
+                    <select id="category-select" onchange="applyFilters()">
+                        <option value="Todas">Todas las Categorías</option>
+                    </select>
+                </div>
+
+                <div class="glass-select-wrap">
+                    <label>Ordenar:</label>
+                    <select id="sort-select" onchange="applyFilters()">
+                        <option value="discount_desc">Mayor Descuento %</option>
+                        <option value="price_changed">Precios Modificados Recientes 🔔</option>
+                        <option value="just_exhausted">Recién Agotados (Sin Stock) ⚠️</option>
+                        <option value="stock_asc">Menor Stock (Por Agotarse) ⚡</option>
+                        <option value="stock_desc">Mayor Stock Disponible 📦</option>
+                        <option value="min_first">Mínimo Histórico Primero ⭐</option>
+                        <option value="price_asc">Menor Precio</option>
+                        <option value="price_desc">Mayor Precio</option>
+                        <option value="name_asc">Nombre (A - Z)</option>
+                    </select>
+                </div>
+
+                <label class="glass-toggle-container">
+                    <input type="checkbox" id="only-min-checkbox" onchange="applyFilters()">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Solo Mínimos Históricos ⭐</span>
+                </label>
+
+                <!-- Conmutador de Vista (Cuadrícula con Fotos Gigantes vs Lista Detallada) -->
+                <div class="view-switch-group glass-subpanel">
+                    <button id="view-grid-btn" class="switch-btn active" title="Vista Cuadrícula (Fotos Grandes)" onclick="setViewMode('grid')">
+                        <i class="ph-bold ph-squares-four"></i>
+                    </button>
+                    <button id="view-list-btn" class="switch-btn" title="Vista Lista Detallada" onclick="setViewMode('list')">
+                        <i class="ph-bold ph-list-dashes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor de Productos (Cuadrícula o Tabla) -->
+        <div id="products-container" class="products-grid-mode">
+            <!-- Inyectado dinámicamente -->
+        </div>
+    </main>
+
+    <!-- VISTA 2: CAMPAÑAS PUBLICITARIAS PASADAS & IMPERDIBLES -->
+    <main id="view-campaigns" class="tab-view">
+        <div class="glass-card campaigns-hero">
+            <div class="hero-icon-bubble">
+                <i class="ph-fill ph-archive-box"></i>
+            </div>
+            <div>
+                <h2>Archivo Histórico de Campañas Publicitarias & Imperdibles</h2>
+                <p>Registro de banners principales, secciones <b>"Te presentamos nuestros imperdibles"</b> (como <i>Hit del Mes</i> WH-1000XM5 con cupón, Black Friday SRS-XV500 41% OFF) y promociones archivadas por fecha.</p>
+            </div>
+        </div>
+
+        <!-- Cuadrícula de Recuadros de Campaña por Fecha -->
+        <div id="campaigns-grid" class="campaigns-grid">
+            <!-- Inyectado dinámicamente -->
+        </div>
+    </main>
+
+    <!-- MODAL: HISTORIAL DE PRECIO DEL PRODUCTO (LIQUID GLASS + CHART.JS) -->
+    <div id="price-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+        <div class="glass-modal">
+            <button class="modal-close-btn" onclick="closePriceModal()">&times;</button>
+            
+            <div class="modal-header-glass">
+                <div class="modal-img-container">
+                    <img id="modal-prod-img" src="" alt="Producto" class="modal-hero-img">
+                </div>
+                <div class="modal-title-col">
+                    <span id="modal-prod-category" class="glass-badge badge-accent">Categoría</span>
+                    <h3 id="modal-prod-name">Nombre del Producto</h3>
+                    <p id="modal-prod-sku" class="sku-glass">SKU: ...</p>
+                </div>
+            </div>
+
+            <!-- Tarjetas de Métricas del Producto -->
+            <div class="modal-stats-grid">
+                <div class="glass-subcard">
+                    <span class="subcard-label">Precio Actual</span>
+                    <span class="subcard-val text-cyan" id="modal-price-current">...</span>
+                </div>
+                <div class="glass-subcard highlight-emerald">
+                    <span class="subcard-label">Mínimo Histórico Registrado</span>
+                    <span class="subcard-val text-emerald" id="modal-price-min">...</span>
+                </div>
+                <div class="glass-subcard">
+                    <span class="subcard-label">Precio Máximo Registrado</span>
+                    <span class="subcard-val text-muted" id="modal-price-max">...</span>
+                </div>
+                <div class="glass-subcard">
+                    <span class="subcard-label">Ahorro Máximo</span>
+                    <span class="subcard-val text-amber" id="modal-price-savings">...</span>
+                </div>
+                <div class="glass-subcard">
+                    <span class="subcard-label">Stock en Inventario</span>
+                    <span class="subcard-val text-cyan" id="modal-stock-current">...</span>
+                </div>
+                <div class="glass-subcard" id="modal-stock-status-card">
+                    <span class="subcard-label">Estado de Inventario</span>
+                    <span class="subcard-val" id="modal-stock-status">...</span>
+                </div>
+            </div>
+
+            <!-- Gráfico Interactivo de Precios (Estilo SteamDB) -->
+            <div class="chart-glass-card">
+                <div class="chart-header-row">
+                    <h4><i class="ph-bold ph-chart-line"></i> Evolución de Precio en el Tiempo</h4>
+                    <span class="glass-badge badge-emerald"><i class="ph-bold ph-activity"></i> Curva SteamDB (Stepped)</span>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="priceHistoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico Interactivo de Stock Disponible -->
+            <div class="chart-glass-card">
+                <div class="chart-header-row">
+                    <h4><i class="ph-bold ph-package"></i> Evolución de Stock Disponible en el Tiempo</h4>
+                    <span class="glass-badge badge-accent" id="modal-stock-badge"><i class="ph-bold ph-cubes"></i> Unidades en Inventario</span>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="stockHistoryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer-row">
+                <a id="modal-sony-link" href="#" target="_blank" rel="noopener noreferrer" class="glass-btn-primary">
+                    <i class="ph-bold ph-arrow-square-out"></i> Ver en Tienda Sony Oficial
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALLE DE BANNERS DE LA CAMPAÑA -->
+    <div id="campaign-modal" class="modal-backdrop" onclick="closeCampaignModalOnBackdrop(event)">
+        <div class="glass-modal modal-large">
+            <button class="modal-close-btn" onclick="closeCampaignModal()">&times;</button>
+            
+            <div class="camp-modal-header">
+                <div class="camp-tags-row">
+                    <span id="modal-camp-dates" class="glass-badge badge-amber">📅 DEL 20 AL 30 DE NOVIEMBRE</span>
+                    <span id="modal-camp-status" class="glass-badge badge-emerald">🟢 Activa</span>
+                </div>
+                <h2 id="modal-camp-title" class="camp-modal-title">Título de Campaña</h2>
+                <p id="modal-camp-desc" class="camp-modal-desc">Descripción...</p>
+            </div>
+
+            <div class="camp-banners-holder">
+                <h3><i class="ph-bold ph-images"></i> Banners Archivados en esta Fecha</h3>
+                <div id="modal-banners-list" class="banners-flex-list">
+                    <!-- Banners inyectados dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="glass-toast">Mensaje</div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

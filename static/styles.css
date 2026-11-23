@@ -1,0 +1,1798 @@
+:root {
+    --bg-base: #06080d;
+    --glass-bg: rgba(18, 24, 38, 0.62);
+    --glass-card: rgba(22, 30, 48, 0.58);
+    --glass-card-hover: rgba(28, 40, 64, 0.72);
+    --glass-subpanel: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-focus: rgba(56, 189, 248, 0.55);
+    --glass-highlight: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
+    --glass-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --accent-cyan: #38bdf8;
+    --accent-blue: #3b82f6;
+    --accent-emerald: #10b981;
+    --accent-lime: #a3e635;
+    --accent-rose: #f43f5e;
+    --accent-amber: #f59e0b;
+    --accent-purple: #8b5cf6;
+
+    --font-main: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    --ease-ios: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   AMBIENT LIQUID GLOW (Fondo líquido refractante estilo iOS)
+   ========================================================================== */
+.ambient-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.38;
+    animation: floatOrb 22s ease-in-out infinite alternate;
+}
+
+.orb-cyan {
+    top: -10%;
+    left: 15%;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #0284c7 0%, rgba(2,132,199,0) 70%);
+}
+
+.orb-purple {
+    top: 25%;
+    right: -5%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #6366f1 0%, rgba(99,102,241,0) 70%);
+    animation-duration: 28s;
+}
+
+.orb-blue {
+    bottom: -15%;
+    left: 20%;
+    width: 650px;
+    height: 650px;
+    background: radial-gradient(circle, #1d4ed8 0%, rgba(29,78,216,0) 70%);
+    animation-duration: 24s;
+}
+
+.orb-emerald {
+    top: 55%;
+    left: -10%;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, #059669 0%, rgba(5,150,105,0) 70%);
+    animation-duration: 30s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, 30px) scale(1.08); }
+    100% { transform: translate(-30px, 50px) scale(0.95); }
+}
+
+/* ==========================================================================
+   ESTILOS BASE LIQUID GLASS
+   ========================================================================== */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: var(--glass-highlight), 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.glass-card {
+    background: var(--glass-card);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--glass-highlight), var(--glass-shadow);
+    transition: all 0.3s var(--ease-ios);
+}
+
+.glass-subpanel {
+    background: var(--glass-subpanel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+}
+
+/* ==========================================================================
+   CABECERA & SEGMENTED CONTROL (Estilo iOS 26)
+   ========================================================================== */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 12px 28px;
+}
+
+.header-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.8), rgba(99, 102, 241, 0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+}
+
+.brand h1 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #fff;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* iOS Segmented Control */
+.ios-segmented-control {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    gap: 4px;
+    border-radius: 16px;
+}
+
+.segmented-item {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 9px 18px;
+    border-radius: 12px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s var(--ease-ios);
+}
+
+.segmented-item:hover {
+    color: #fff;
+}
+
+.segmented-item.active {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.segmented-item.campaign-tab {
+    color: #fde047;
+}
+
+.segmented-item.campaign-tab.active {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.4));
+    color: #fef08a;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--glass-highlight);
+    transition: all 0.2s;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   MÉTRICAS (STATS)
+   ========================================================================== */
+.stats-container {
+    max-width: 1440px;
+    margin: 24px auto 14px;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.stat-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.25);
+}
+
+.icon-blue { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); border: 1px solid rgba(56, 189, 248, 0.3); }
+.icon-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+.icon-rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+.icon-amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+.stat-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: 4px;
+    display: block;
+}
+
+.text-emerald { color: var(--accent-emerald); }
+.text-rose { color: var(--accent-rose); }
+.text-amber { color: var(--accent-amber); }
+.text-cyan { color: var(--accent-cyan); }
+
+/* ==========================================================================
+   PANEL DE CONTROLES & FILTROS
+   ========================================================================== */
+.tab-view {
+    display: none;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 10px 28px 80px;
+    position: relative;
+    z-index: 1;
+}
+
+.tab-view.active {
+    display: block;
+}
+
+.controls-card {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.search-box {
+    position: relative;
+    flex: 1 1 340px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.search-box input {
+    width: 100%;
+    background: rgba(10, 14, 22, 0.55);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px 14px 10px 42px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+    transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.filters-cluster {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.glass-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.glass-select-wrap select {
+    background: rgba(10, 14, 22, 0.6);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.glass-select-wrap select:focus {
+    border-color: var(--accent-cyan);
+}
+
+/* iOS Toggle Switch */
+.glass-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.glass-toggle-container input {
+    display: none;
+}
+
+.toggle-slider {
+    width: 38px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.25s var(--ease-ios);
+    border: 1px solid var(--glass-border);
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.25s var(--ease-ios);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.glass-toggle-container input:checked + .toggle-slider {
+    background: var(--accent-emerald);
+}
+
+.glass-toggle-container input:checked + .toggle-slider::after {
+    transform: translateX(16px);
+}
+
+.toggle-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Conmutador de Vistas (Cuadrícula vs Lista) */
+.view-switch-group {
+    display: flex;
+    padding: 3px;
+    gap: 2px;
+}
+
+.switch-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.switch-btn.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+/* ==========================================================================
+   1. VISTA CUADRÍCULA (HERO PHOTO SHOWCASE - Fotos Grandes Pedidas)
+   ========================================================================== */
+.products-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+}
+
+.product-hero-card {
+    background: var(--glass-card);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: var(--glass-highlight), var(--glass-shadow);
+    transition: all 0.3s var(--ease-ios);
+    overflow: hidden;
+}
+
+.product-hero-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(56, 189, 248, 0.45);
+    background: var(--glass-card-hover);
+    box-shadow: 0 20px 48px -10px rgba(0,0,0,0.65), 0 0 24px rgba(56, 189, 248, 0.15);
+}
+
+/* Contenedor de la Foto Principal (Grande, destacada y cristalina) */
+.card-img-stage {
+    width: 100%;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(10, 14, 24, 0.45) 100%);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 16px;
+    overflow: hidden;
+}
+
+.card-hero-img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.4s var(--ease-ios);
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+}
+
+.product-hero-card:hover .card-hero-img {
+    transform: scale(1.08);
+}
+
+/* Insignias Flotantes sobre la Imagen */
+.badge-discount-float {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.9), rgba(225, 29, 72, 0.9));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 2;
+}
+
+.badge-min-low-float {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 2;
+}
+
+/* Detalles del Producto bajo la imagen */
+.card-details {
+    padding: 14px 4px 4px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-cat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.glass-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge-accent { background: rgba(56, 189, 248, 0.12); color: var(--accent-cyan); border-color: rgba(56, 189, 248, 0.25); }
+.badge-emerald { background: rgba(16, 185, 129, 0.14); color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.3); }
+.badge-amber { background: rgba(245, 158, 11, 0.14); color: var(--accent-amber); border-color: rgba(245, 158, 11, 0.3); }
+
+.card-sku {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.card-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.7em;
+}
+
+.card-price-row {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.price-stack {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-strike-liquid {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.price-current-liquid {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.3px;
+}
+
+.btn-card-action {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--glass-highlight);
+    transition: all 0.2s var(--ease-ios);
+}
+
+.btn-card-action:hover {
+    background: var(--accent-cyan);
+    color: #07090e;
+    border-color: var(--accent-cyan);
+    transform: scale(1.04);
+}
+
+/* ==========================================================================
+   2. VISTA TABLA ESPACIOSA (Con Fotos de 100px)
+   ========================================================================== */
+.table-glass-wrap {
+    border-radius: 20px;
+    overflow-x: auto;
+}
+
+.glass-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.glass-table thead {
+    background: rgba(12, 18, 30, 0.75);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-table th {
+    padding: 14px 18px;
+    color: var(--text-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.6px;
+}
+
+.glass-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.2s;
+}
+
+.glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.glass-table td {
+    padding: 14px 18px;
+    vertical-align: middle;
+}
+
+/* Foto grande en la tabla (96px x 96px) */
+.prod-thumb-large {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(10, 14, 24, 0.5) 100%);
+    border-radius: 14px;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s;
+}
+
+.prod-thumb-large:hover {
+    transform: scale(1.06);
+}
+
+.table-prod-title {
+    font-weight: 700;
+    color: #fff;
+    font-size: 0.95rem;
+    max-width: 320px;
+}
+
+/* ==========================================================================
+   CAMPAÑAS PUBLICITARIAS PASADAS (Recuadros de Cristal)
+   ========================================================================== */
+.campaigns-hero {
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.hero-icon-bubble {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.4));
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+}
+
+.campaigns-hero h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.campaigns-hero p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.campaigns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+}
+
+.campaign-glass-card {
+    background: var(--glass-card);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--glass-highlight), var(--glass-shadow);
+    transition: all 0.3s var(--ease-ios);
+    cursor: pointer;
+}
+
+.campaign-glass-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 20px 48px -10px rgba(0,0,0,0.65), 0 0 24px rgba(245, 158, 11, 0.2);
+}
+
+.camp-glass-img-stage {
+    height: 190px;
+    position: relative;
+    background: #090d16;
+    overflow: hidden;
+}
+
+.camp-glass-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease-ios);
+}
+
+.campaign-glass-card:hover .camp-glass-img {
+    transform: scale(1.05);
+}
+
+.camp-glass-date-pill {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(10, 14, 24, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fde047;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.camp-card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.camp-pretitle {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--accent-amber);
+    letter-spacing: 0.6px;
+}
+
+.camp-maintitle {
+    font-size: 1.18rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 6px 0 10px;
+    line-height: 1.3;
+}
+
+.camp-desc-text {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.camp-bottom-row {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.camp-count-badge {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   MODALES (LIQUID GLASS POPUPS)
+   ========================================================================== */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(3, 5, 9, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.glass-modal {
+    background: rgba(18, 24, 38, 0.88);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 28px;
+    max-width: 820px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    position: relative;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 28px 60px rgba(0,0,0,0.8);
+    animation: modalPop 0.3s var(--ease-ios);
+}
+
+.glass-modal.modal-large {
+    max-width: 1040px;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+/* Modal Producto & Foto Gigante */
+.modal-header-glass {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-img-container {
+    width: 130px;
+    height: 130px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(10, 14, 24, 0.6) 100%);
+    border-radius: 20px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.modal-hero-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.modal-title-col h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 6px 0 2px;
+}
+
+.sku-glass {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.modal-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.glass-subcard {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 14px;
+}
+
+.glass-subcard.highlight-emerald {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.subcard-label {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    display: block;
+}
+
+.subcard-val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 4px;
+    display: block;
+}
+
+.chart-glass-card {
+    background: rgba(10, 14, 24, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.canvas-holder {
+    height: 260px;
+    width: 100%;
+}
+
+.glass-btn-primary {
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+    color: #04101e;
+    font-weight: 800;
+    padding: 11px 22px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+    transition: transform 0.2s;
+}
+
+.glass-btn-primary:hover {
+    transform: scale(1.03);
+}
+
+/* Modal Campaña Detalle */
+.camp-modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+}
+
+.camp-tags-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.camp-modal-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.camp-modal-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 8px;
+}
+
+.banners-flex-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.banner-glass-wrapper {
+    background: rgba(10, 14, 24, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.banner-full-img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+    background: #000;
+    display: block;
+}
+
+.banner-glass-foot {
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.82rem;
+}
+
+.banner-glass-foot a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Toast */
+.glass-toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: rgba(18, 24, 38, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--accent-cyan);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+    display: none;
+    z-index: 200;
+}
+
+.glass-toast.show {
+    display: block;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* ==========================================================================
+   ESTILOS PARA PRODUCTOS SIN STOCK / AGOTADOS
+   ========================================================================== */
+.badge-stock-out-float {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.95));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 2;
+    letter-spacing: 0.3px;
+}
+
+.badge-price-drop-float {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 2;
+    letter-spacing: 0.2px;
+}
+
+.badge-price-rise-float {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 2;
+    letter-spacing: 0.2px;
+}
+
+.table-price-prev {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.product-hero-card.is-out-of-stock {
+    opacity: 0.82;
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.product-hero-card.is-out-of-stock:hover {
+    border-color: rgba(239, 68, 68, 0.45);
+    box-shadow: 0 16px 36px -10px rgba(0,0,0,0.6), 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.product-hero-card.is-out-of-stock .card-hero-img {
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45)) grayscale(30%);
+}
+
+.price-out-of-stock {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.stock-out-label {
+    font-size: 0.72rem;
+    color: #f87171;
+    font-weight: 700;
+    display: block;
+    margin-top: 2px;
+}
+
+.price-unavailable {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #f87171;
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 8px;
+}
+
+.badge-out-of-stock-table {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Insignias de Stock e Ítems Recién Agotados */
+.badge-just-exhausted-float {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(245, 158, 11, 0.95));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index: 3;
+    animation: pulseExhausted 2s infinite ease-in-out;
+}
+
+@keyframes pulseExhausted {
+    0%, 100% { transform: scale(1); box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5); }
+    50% { transform: scale(1.04); box-shadow: 0 6px 18px rgba(245, 158, 11, 0.7); }
+}
+
+.badge-stock-low-float {
+    position: absolute;
+    top: 42px;
+    left: 12px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.92), rgba(217, 119, 6, 0.92));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    z-index: 2;
+}
+
+.badge-stock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+}
+
+.badge-stock-pill.stock-plenty {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--accent-cyan);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.badge-stock-pill.stock-low {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-amber);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.badge-stock-pill.stock-zero {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.badge-just-exhausted-table {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2));
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (DISEÑO ADAPTABLE A MÓVILES Y TABLETS)
+   ========================================================================== */
+
+/* Optimizaciones táctiles globales */
+button, select, input, a, .segmented-item, .glass-card, .campaign-glass-card {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 1. TABLETS Y PANTALLAS MEDIANAS (<= 1024px) */
+@media (max-width: 1024px) {
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .products-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .campaigns-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+}
+
+/* 2. TABLETS EN MODO RETRATO Y SMARTPHONES GRANDES (<= 768px) */
+@media (max-width: 768px) {
+    .app-header {
+        padding: max(10px, env(safe-area-inset-top, 10px)) 16px 10px;
+    }
+
+    .header-container {
+        gap: 12px;
+    }
+
+    .brand {
+        gap: 10px;
+    }
+
+    .brand-logo {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+    }
+
+    .brand h1 {
+        font-size: 1.2rem;
+    }
+
+    .tagline {
+        font-size: 0.7rem;
+    }
+
+    /* Segmented control ocupa el 100% del ancho */
+    .ios-segmented-control {
+        width: 100%;
+        order: 3;
+        margin-top: 4px;
+        justify-content: stretch;
+    }
+
+    .segmented-item {
+        flex: 1;
+        justify-content: center;
+        padding: 9px 12px;
+        font-size: 0.8rem;
+        gap: 6px;
+    }
+
+    .header-actions {
+        order: 2;
+        margin-left: auto;
+    }
+
+    .glass-btn {
+        padding: 8px 12px;
+        font-size: 0.78rem;
+    }
+
+    /* Métricas en 2 columnas */
+    .stats-container {
+        padding: 0 16px;
+        margin: 16px auto 10px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* La 5ta métrica (Campañas) se expande */
+    .stat-card:nth-child(5) {
+        grid-column: span 2;
+    }
+
+    .stat-card {
+        padding: 12px 14px;
+        gap: 12px;
+        border-radius: 16px;
+    }
+
+    .stat-icon-wrap {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+        border-radius: 12px;
+    }
+
+    .stat-value {
+        font-size: 1.35rem;
+    }
+
+    .stat-label {
+        font-size: 0.68rem;
+    }
+
+    /* Vistas principales */
+    .tab-view {
+        padding: 6px 16px max(70px, env(safe-area-inset-bottom, 20px));
+    }
+
+    /* Panel de controles y filtros */
+    .controls-card {
+        padding: 14px;
+        border-radius: 18px;
+        margin-bottom: 18px;
+        gap: 12px;
+    }
+
+    .search-box {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .search-box input {
+        font-size: 0.84rem;
+        padding: 10px 14px 10px 38px;
+    }
+
+    .filters-cluster {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .glass-select-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .glass-select-wrap select {
+        width: 100%;
+        padding: 9px 10px;
+        font-size: 0.8rem;
+    }
+
+    .glass-toggle-container {
+        grid-column: span 2;
+        padding: 6px 0;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .view-switch-group {
+        grid-column: span 2;
+        justify-content: center;
+        margin-top: 4px;
+    }
+
+    /* Grilla de productos */
+    .products-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .card-img-stage {
+        height: 190px;
+        border-radius: 14px;
+    }
+
+    .card-title {
+        font-size: 0.92rem;
+    }
+
+    .price-current-liquid {
+        font-size: 1.15rem;
+    }
+
+    /* Tabla con scroll táctil suave */
+    .table-glass-wrap {
+        border-radius: 16px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .glass-table {
+        min-width: 650px;
+    }
+
+    .glass-table th, .glass-table td {
+        padding: 10px 12px;
+    }
+
+    /* Campañas */
+    .campaigns-hero {
+        padding: 16px;
+        gap: 14px;
+        border-radius: 18px;
+    }
+
+    .hero-icon-bubble {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+        border-radius: 12px;
+    }
+
+    .campaigns-hero h2 {
+        font-size: 1.15rem;
+    }
+
+    .campaigns-hero p {
+        font-size: 0.82rem;
+    }
+
+    .campaigns-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .camp-glass-img-stage {
+        height: 180px;
+    }
+
+    .camp-card-content {
+        padding: 16px;
+    }
+
+    .camp-maintitle {
+        font-size: 1.08rem;
+    }
+
+    /* Modales */
+    .modal-backdrop {
+        padding: 12px;
+    }
+
+    .glass-modal {
+        padding: 20px 16px;
+        border-radius: 22px;
+        max-height: 92vh;
+    }
+
+    .modal-header-glass {
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .modal-img-container {
+        width: 90px;
+        height: 90px;
+        border-radius: 14px;
+        padding: 6px;
+    }
+
+    .modal-title-col h3 {
+        font-size: 1.12rem;
+    }
+
+    .modal-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .glass-subcard {
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+
+    .subcard-val {
+        font-size: 1.15rem;
+    }
+
+    .chart-glass-card {
+        padding: 14px 10px;
+        border-radius: 16px;
+        margin-bottom: 18px;
+    }
+
+    .canvas-holder {
+        height: 210px;
+    }
+
+    .glass-btn-primary {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .banner-full-img {
+        max-height: 280px;
+    }
+
+    .banner-glass-foot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .glass-toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        text-align: center;
+    }
+}
+
+/* 3. DISPOSITIVOS MÓVILES PEQUEÑOS (<= 480px) */
+@media (max-width: 480px) {
+    .app-header {
+        padding: max(8px, env(safe-area-inset-top, 8px)) 12px 8px;
+    }
+
+    .brand h1 {
+        font-size: 1.05rem;
+    }
+
+    .tagline {
+        display: none;
+    }
+
+    .header-actions .btn-sync span {
+        display: none;
+    }
+
+    .header-actions .btn-sync {
+        padding: 8px 10px;
+    }
+
+    .segmented-item {
+        font-size: 0.74rem;
+        padding: 8px 4px;
+        gap: 4px;
+    }
+
+    .segmented-item i {
+        font-size: 16px;
+    }
+
+    .stats-container {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .stat-icon-wrap {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+
+    .tab-view {
+        padding: 4px 12px max(70px, env(safe-area-inset-bottom, 20px));
+    }
+
+    .filters-cluster {
+        grid-template-columns: 1fr;
+    }
+
+    .glass-toggle-container {
+        grid-column: span 1;
+    }
+
+    .view-switch-group {
+        grid-column: span 1;
+        width: 100%;
+    }
+
+    .switch-btn {
+        flex: 1;
+    }
+
+    /* Grilla de productos: 1 sola tarjeta limpia por fila */
+    .products-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .card-img-stage {
+        height: 210px;
+    }
+
+    .card-hero-img {
+        max-width: 85%;
+        max-height: 85%;
+    }
+
+    .card-price-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .btn-card-action {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    /* Modal cabecera apilada */
+    .modal-header-glass {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .modal-img-container {
+        width: 100%;
+        height: 140px;
+    }
+
+    .modal-hero-img {
+        max-height: 120px;
+    }
+}
