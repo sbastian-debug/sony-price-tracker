@@ -1,3 +1,1 @@
-# Dependencias para Sony Bolivia Price Tracker en Render
-# El proyecto utiliza modulos nativos de Python (sqlite3, urllib, http.server)
-urllib3>=2.0.0
+# Utiliza exclusivamente la biblioteca estándar de Python 3 (sqlite3, http.server, urllib, json, gzip, zlib, threading).

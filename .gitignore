@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 *.log
 
+# SQLite WAL temporales
+*.db-wal
+*.db-shm
+
 # Entornos virtuales
 venv/
 env/

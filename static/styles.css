@@ -255,9 +255,14 @@ body {
     transition: all 0.2s;
 }
 
-.glass-btn:hover {
+.glass-btn:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.14);
     transform: translateY(-1px);
+}
+
+.glass-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
 }
 
 /* ==========================================================================
@@ -533,6 +538,7 @@ body {
     position: relative;
     padding: 16px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .card-hero-img {
@@ -547,11 +553,24 @@ body {
     transform: scale(1.08);
 }
 
+/* Contenedor apilado de insignias en esquina superior izquierda (evita solapamientos) */
+.card-badges-top-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    z-index: 3;
+    pointer-events: none;
+}
+
 /* Insignias Flotantes sobre la Imagen */
 .badge-discount-float {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     background: linear-gradient(135deg, rgba(244, 63, 94, 0.9), rgba(225, 29, 72, 0.9));
     color: #fff;
     font-weight: 800;
@@ -559,24 +578,20 @@ body {
     padding: 4px 10px;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
-    z-index: 2;
+    z-index: 3;
 }
 
 .badge-min-low-float {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.92), rgba(5, 150, 105, 0.92));
     color: #fff;
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.71rem;
     padding: 4px 10px;
     border-radius: 20px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
-    z-index: 2;
 }
 
 /* Detalles del Producto bajo la imagen */
@@ -623,6 +638,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 2.7em;
+    cursor: pointer;
 }
 
 .card-price-row {
@@ -1166,20 +1182,16 @@ body {
    ESTILOS PARA PRODUCTOS SIN STOCK / AGOTADOS
    ========================================================================== */
 .badge-stock-out-float {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.95));
     color: #fff;
     font-weight: 800;
-    font-size: 0.72rem;
+    font-size: 0.71rem;
     padding: 4px 10px;
     border-radius: 20px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
-    z-index: 2;
     letter-spacing: 0.3px;
 }
 
@@ -1279,20 +1291,16 @@ body {
 
 /* Insignias de Stock e Ítems Recién Agotados */
 .badge-just-exhausted-float {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(245, 158, 11, 0.95));
     color: #fff;
     font-weight: 800;
-    font-size: 0.72rem;
+    font-size: 0.71rem;
     padding: 4px 10px;
     border-radius: 20px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5), inset 0 1px 1px rgba(255,255,255,0.4);
-    z-index: 3;
     animation: pulseExhausted 2s infinite ease-in-out;
 }
 
@@ -1302,20 +1310,16 @@ body {
 }
 
 .badge-stock-low-float {
-    position: absolute;
-    top: 42px;
-    left: 12px;
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.92), rgba(217, 119, 6, 0.92));
     color: #fff;
     font-weight: 800;
     font-size: 0.68rem;
     padding: 3px 8px;
     border-radius: 16px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-    z-index: 2;
 }
 
 .badge-stock-pill {
@@ -1358,6 +1362,175 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+}
+
+/* Insignia para Productos Reabastecidos (Volvieron a tener stock) */
+.badge-restocked-float {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(6, 182, 212, 0.95));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.71rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5), inset 0 1px 1px rgba(255,255,255,0.4);
+    animation: pulseRestocked 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseRestocked {
+    0%, 100% { transform: scale(1); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5); }
+    50% { transform: scale(1.04); box-shadow: 0 6px 18px rgba(6, 182, 212, 0.7); }
+}
+
+.badge-restocked-table {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+    color: #a7f3d0;
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ==========================================================================
+   INSIGNIAS DE PROMOCIONES, REGALOS Y COLECCIONES INTERNAS (Puntos 2 & 3)
+   ========================================================================== */
+.is-hidden {
+    display: none !important;
+}
+
+.badge-promo-float {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.94), rgba(59, 130, 246, 0.94));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.69rem;
+    padding: 3px 9px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4), inset 0 1px 1px rgba(255,255,255,0.35);
+}
+
+.badge-gift-float {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.94), rgba(244, 63, 94, 0.94));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.69rem;
+    padding: 3px 9px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.45), inset 0 1px 1px rgba(255,255,255,0.35);
+}
+
+.badge-new-cluster-float {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.92), rgba(14, 165, 233, 0.92));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 10px rgba(6, 182, 212, 0.35);
+}
+
+.card-collections-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.col-chip {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+}
+
+.col-chip.col-special {
+    background: rgba(139, 92, 246, 0.16);
+    border-color: rgba(139, 92, 246, 0.38);
+    color: #d8b4fe;
+}
+
+.col-chip.col-sale {
+    background: rgba(244, 63, 94, 0.14);
+    border-color: rgba(244, 63, 94, 0.35);
+    color: #fda4af;
+}
+
+.modal-promos-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.promos-list-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.promo-pill-card {
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.32);
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: #e9d5ff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.promo-pill-card.promo-gift {
+    background: rgba(236, 72, 153, 0.14);
+    border-color: rgba(236, 72, 153, 0.38);
+    color: #fbcfe8;
+}
+
+.promo-pill-card.promo-buytogether {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.32);
+    color: #bae6fd;
+}
+
+.promo-pill-card a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.collections-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.collections-row-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-right: 4px;
 }
 
 

@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#06080d">
     <title>SonyBoliviaDB - Liquid Glass UI</title>
-    <!-- Chart.js para gráficas interactivas -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js para gráficas interactivas (versión fijada + SRI) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+            integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/styles.css">
-    <!-- Iconos Phosphor -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Iconos Phosphor (versión fijada + SRI) -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"
+            integrity="sha384-cPFV+/abYd3INVFHPmSKpBmcnH+Q+bTZW7dv/EiuShUNPkHyFmRF8PsL7Ibfvunk"
+            crossorigin="anonymous"></script>
     <!-- Fuente Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,18 +43,18 @@
 
             <!-- Segmented Control estilo iOS con 2 Pestañas -->
             <nav class="ios-segmented-control glass-subpanel">
-                <button id="tab-products-btn" class="segmented-item active" onclick="switchTab('products')">
+                <button id="tab-products-btn" type="button" class="segmented-item active">
                     <i class="ph-bold ph-squares-four"></i>
                     <span>Catálogo & Precios</span>
                 </button>
-                <button id="tab-campaigns-btn" class="segmented-item campaign-tab" onclick="switchTab('campaigns')">
+                <button id="tab-campaigns-btn" type="button" class="segmented-item campaign-tab">
                     <i class="ph-bold ph-megaphone"></i>
                     <span>Campañas & Imperdibles</span>
                 </button>
             </nav>
 
             <div class="header-actions">
-                <button id="sync-btn" class="glass-btn btn-sync" onclick="triggerSync()">
+                <button id="sync-btn" type="button" class="glass-btn btn-sync">
                     <i class="ph-bold ph-arrows-clockwise" id="sync-icon"></i>
                     <span>Actualizar Sony</span>
                 </button>
@@ -117,31 +121,40 @@
         <div class="glass-card controls-card">
             <div class="search-box glass-input-wrap">
                 <i class="ph-bold ph-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Buscar por producto, modelo (ej. Bravia, WH-1000XM6, XB100)..." oninput="applyFiltersDebounced()">
+                <input type="text" id="search-input" maxlength="120" placeholder="Buscar por producto, modelo (ej. Bravia, WH-1000XM6, XB100)...">
             </div>
 
             <div class="filters-cluster">
                 <div class="glass-select-wrap">
-                    <label>Disponibilidad:</label>
-                    <select id="stock-select" onchange="applyFilters()">
+                    <label for="stock-select">Disponibilidad:</label>
+                    <select id="stock-select">
                         <option value="in_stock" selected>En Stock (Disponibles)</option>
                         <option value="all">Todos los Productos</option>
+                        <option value="restocked">Volvieron a Tener Stock 🎉</option>
                         <option value="out_of_stock">Solo Agotados</option>
                         <option value="just_exhausted">Recién Agotados ⚠️</option>
                     </select>
                 </div>
 
                 <div class="glass-select-wrap">
-                    <label>Categoría:</label>
-                    <select id="category-select" onchange="applyFilters()">
+                    <label for="category-select">Categoría:</label>
+                    <select id="category-select">
                         <option value="Todas">Todas las Categorías</option>
                     </select>
                 </div>
 
                 <div class="glass-select-wrap">
-                    <label>Ordenar:</label>
-                    <select id="sort-select" onchange="applyFilters()">
+                    <label for="collection-select">Colección:</label>
+                    <select id="collection-select">
+                        <option value="Todas">Todas las Colecciones</option>
+                    </select>
+                </div>
+
+                <div class="glass-select-wrap">
+                    <label for="sort-select">Ordenar:</label>
+                    <select id="sort-select">
                         <option value="discount_desc">Mayor Descuento %</option>
+                        <option value="restocked">Volvieron a Tener Stock (Reabastecidos) 🎉</option>
                         <option value="price_changed">Precios Modificados Recientes 🔔</option>
                         <option value="just_exhausted">Recién Agotados (Sin Stock) ⚠️</option>
                         <option value="stock_asc">Menor Stock (Por Agotarse) ⚡</option>
@@ -154,17 +167,23 @@
                 </div>
 
                 <label class="glass-toggle-container">
-                    <input type="checkbox" id="only-min-checkbox" onchange="applyFilters()">
+                    <input type="checkbox" id="only-min-checkbox">
                     <span class="toggle-slider"></span>
                     <span class="toggle-label">Solo Mínimos Históricos ⭐</span>
                 </label>
 
+                <label class="glass-toggle-container">
+                    <input type="checkbox" id="only-promo-checkbox">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Con Promo / Combo 🏷️</span>
+                </label>
+
                 <!-- Conmutador de Vista (Cuadrícula con Fotos Gigantes vs Lista Detallada) -->
                 <div class="view-switch-group glass-subpanel">
-                    <button id="view-grid-btn" class="switch-btn active" title="Vista Cuadrícula (Fotos Grandes)" onclick="setViewMode('grid')">
+                    <button id="view-grid-btn" type="button" class="switch-btn active" title="Vista Cuadrícula (Fotos Grandes)">
                         <i class="ph-bold ph-squares-four"></i>
                     </button>
-                    <button id="view-list-btn" class="switch-btn" title="Vista Lista Detallada" onclick="setViewMode('list')">
+                    <button id="view-list-btn" type="button" class="switch-btn" title="Vista Lista Detallada">
                         <i class="ph-bold ph-list-dashes"></i>
                     </button>
                 </div>
@@ -172,7 +191,7 @@
         </div>
 
         <!-- Contenedor de Productos (Cuadrícula o Tabla) -->
-        <div id="products-container" class="products-grid-mode">
+        <div id="products-container" class="products-cards-grid">
             <!-- Inyectado dinámicamente -->
         </div>
     </main>
@@ -185,7 +204,7 @@
             </div>
             <div>
                 <h2>Archivo Histórico de Campañas Publicitarias & Imperdibles</h2>
-                <p>Registro de banners principales, secciones <b>"Te presentamos nuestros imperdibles"</b> (como <i>Hit del Mes</i> WH-1000XM5 con cupón, Black Friday SRS-XV500 41% OFF) y promociones archivadas por fecha.</p>
+                <p>Registro completo de banners principales, cintillos promocionales, sección <b>"Imperdibles"</b>, <b>Favoritos Sony</b>, popups/cupones y carruseles de <i>Secret Sale</i> archivados por fecha.</p>
             </div>
         </div>
 
@@ -196,9 +215,9 @@
     </main>
 
     <!-- MODAL: HISTORIAL DE PRECIO DEL PRODUCTO (LIQUID GLASS + CHART.JS) -->
-    <div id="price-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+    <div id="price-modal" class="modal-backdrop">
         <div class="glass-modal">
-            <button class="modal-close-btn" onclick="closePriceModal()">&times;</button>
+            <button id="price-modal-close-btn" type="button" class="modal-close-btn" aria-label="Cerrar modal">&times;</button>
             
             <div class="modal-header-glass">
                 <div class="modal-img-container">
@@ -239,11 +258,17 @@
                 </div>
             </div>
 
-            <!-- Gráfico Interactivo de Precios (Estilo SteamDB) -->
+            <!-- Promociones Activas, Regalos, Combínalo & Colecciones -->
+            <div id="modal-promos-section" class="modal-promos-panel is-hidden">
+                <div id="modal-promos-list" class="promos-list-grid"></div>
+                <div id="modal-collections-row" class="collections-chips-row"></div>
+            </div>
+
+            <!-- Gráfico Interactivo de Precios -->
             <div class="chart-glass-card">
                 <div class="chart-header-row">
                     <h4><i class="ph-bold ph-chart-line"></i> Evolución de Precio en el Tiempo</h4>
-                    <span class="glass-badge badge-emerald"><i class="ph-bold ph-activity"></i> Curva SteamDB (Stepped)</span>
+                    <span class="glass-badge badge-emerald"><i class="ph-bold ph-activity"></i> Histórico Escalonado</span>
                 </div>
                 <div class="canvas-holder">
                     <canvas id="priceHistoryChart"></canvas>
@@ -270,9 +295,9 @@
     </div>
 
     <!-- MODAL: DETALLE DE BANNERS DE LA CAMPAÑA -->
-    <div id="campaign-modal" class="modal-backdrop" onclick="closeCampaignModalOnBackdrop(event)">
+    <div id="campaign-modal" class="modal-backdrop">
         <div class="glass-modal modal-large">
-            <button class="modal-close-btn" onclick="closeCampaignModal()">&times;</button>
+            <button id="campaign-modal-close-btn" type="button" class="modal-close-btn" aria-label="Cerrar modal">&times;</button>
             
             <div class="camp-modal-header">
                 <div class="camp-tags-row">
